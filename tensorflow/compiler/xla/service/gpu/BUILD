@@ -150,6 +150,7 @@ cc_library(
     hdrs = ["target_util.h"],
     deps = [
         "//tensorflow/compiler/xla:util",
+        "//tensorflow/compiler/xla/service/llvm_ir:ir_builder_mixin",
         "//tensorflow/compiler/xla/service/llvm_ir:llvm_util",
         "//tensorflow/core:lib",
         "@com_google_absl//absl/base",
