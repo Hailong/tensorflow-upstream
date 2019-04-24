@@ -4029,7 +4029,7 @@ tf_kernel_library(
 tf_kernel_library(
     name = "bias_op",
     prefix = "bias_op",
-    deps = NN_DEPS + [":redux_functor"] + if_cuda([
+    deps = NN_DEPS + [":redux_functor"] + if_cuda_is_configured([
         ":reduction_ops",
         "@cub_archive//:cub",
         "//tensorflow/core:stream_executor",
@@ -4069,7 +4069,7 @@ tf_kernel_library(
 tf_kernel_library(
     name = "softmax_op",
     prefix = "softmax_op",
-    deps = NN_DEPS + if_cuda([
+    deps = NN_DEPS + if_cuda_is_configured([
         ":reduction_ops",
         "@cub_archive//:cub",
     ]) + if_rocm_is_configured([
@@ -4738,7 +4738,7 @@ tf_kernel_library(
     deps = SPARSE_DEPS + [
         ":bounds_check",
         "//third_party/eigen3",
-    ] + if_cuda([
+    ] + if_cuda_is_configured([
         ":reduction_ops",
         "@cub_archive//:cub",
     ]) + if_rocm_is_configured([
@@ -5235,7 +5235,7 @@ tf_kernel_library(
         "//tensorflow/core:framework",
         "//tensorflow/core:lib",
         "//tensorflow/core:lib_internal",
-    ] + if_cuda([
+    ] + if_cuda_is_configured([
         ":reduction_ops",
         "@cub_archive//:cub",
     ]) + if_rocm_is_configured([
