@@ -46,6 +46,7 @@ load(
 load("@local_config_sycl//sycl:build_defs.bzl", "if_sycl")
 load("//tensorflow:tensorflow.bzl", "tf_cuda_cc_test")
 load("//tensorflow:tensorflow.bzl", "tf_cuda_cc_tests")
+load("//tensorflow:tensorflow.bzl", "if_cuda_or_rocm")
 load("@local_config_cuda//cuda:build_defs.bzl", "if_cuda_is_configured")
 load(
     "//tensorflow/core:platform/default/build_config.bzl",
@@ -4029,13 +4030,15 @@ tf_kernel_library(
 tf_kernel_library(
     name = "bias_op",
     prefix = "bias_op",
-    deps = NN_DEPS + [":redux_functor"] + if_cuda_is_configured([
+    deps = NN_DEPS + [
+        ":redux_functor",
+    ] + if_cuda_or_rocm([
         ":reduction_ops",
+    ]) + if_cuda([
         "@cub_archive//:cub",
         "//tensorflow/core:stream_executor",
         "//tensorflow/stream_executor/cuda:cuda_stream",
-    ]) + if_rocm_is_configured([
-        ":reduction_ops",
+    ]) + if_rocm([
         "@rocprim_archive//:rocprim",
     ]),
 )
@@ -4069,11 +4072,11 @@ tf_kernel_library(
 tf_kernel_library(
     name = "softmax_op",
     prefix = "softmax_op",
-    deps = NN_DEPS + if_cuda_is_configured([
+    deps = NN_DEPS + if_cuda_or_rocm([
         ":reduction_ops",
+    ]) + if_cuda([
         "@cub_archive//:cub",
-    ]) + if_rocm_is_configured([
-        ":reduction_ops",
+    ]) + if_rocm([
         "@rocprim_archive//:rocprim",
     ]),
 )
@@ -4738,11 +4741,11 @@ tf_kernel_library(
     deps = SPARSE_DEPS + [
         ":bounds_check",
         "//third_party/eigen3",
-    ] + if_cuda_is_configured([
+    ] + if_cuda_or_rocm([
         ":reduction_ops",
+    ]) + if_cuda([
         "@cub_archive//:cub",
-    ]) + if_rocm_is_configured([
-        ":reduction_ops",
+    ]) + if_rocm([
         "@rocprim_archive//:rocprim",
     ]),
 )
@@ -5235,11 +5238,11 @@ tf_kernel_library(
         "//tensorflow/core:framework",
         "//tensorflow/core:lib",
         "//tensorflow/core:lib_internal",
-    ] + if_cuda_is_configured([
+    ] + if_cuda_or_rocm([
         ":reduction_ops",
+    ]) + if_cuda([
         "@cub_archive//:cub",
-    ]) + if_rocm_is_configured([
-        ":reduction_ops",
+    ]) + if_rocm([
         "@rocprim_archive//:rocprim",
     ]),
 )
